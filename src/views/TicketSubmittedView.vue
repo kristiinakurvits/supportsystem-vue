@@ -1,6 +1,5 @@
 <template>
   <div> Thank you, your support ticket has been sent! </div>
-
 </template>
 
 <script>
