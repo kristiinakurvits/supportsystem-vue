@@ -1,60 +1,80 @@
-<!--<template>-->
-<!--  <div>-->
+<template>
+  <div>
+    <br>
+    <h2>{{ title }}</h2>
+    <table class="table table-hover table-light">
+      <thead>
+      <tr>
+        <th scope="col">Deadline</th>
+        <th scope="col">Title</th>
+        <th scope="col">Description</th>
+        <th scope="col">Name</th>
+        <th scope="col">E-mail</th>
+        <th scope="col">Date added</th>
+        <th scope="col"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr v-for="supportTicket in supportTickets">
+        <th scope="row">{{ supportTicket.deadline}}</th>
+        <td>{{supportTicket.title}}</td>
+        <td>{{supportTicket.description}}</td>
+        <td>{{supportTicket.requesterName}}</td>
+        <td>{{supportTicket.requesterEMail}}</td>
+        <td>{{supportTicket.dateAdded}}</td>
+        <td>
+          <button type="button" style="margin: 5px" class="btn btn-outline-dark"
+                  v-on:click="markTicketSolved(supportTicket.id)">Mark solved
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
 
-<!--    <div>-->
-<!--      <button type="button" style="margin: 5px" class="btn btn-outline-dark" v-on:click="displayActiveTicket">Display-->
-<!--        active tickets-->
-<!--      </button>-->
-<!--    </div>-->
+  </div>
+</template>
 
-<!--    <div v-if="divDisplayAllCustomers">-->
-<!--      <CustomersTable :customers="customers" title="Kõik kliendid"/>-->
-<!--    </div>-->
+<script>
+export default {
+  name: "AdminView",
+  props: {
+    title: String,
 
-<!--  </div>-->
+  },
+  data: function () {
+    return {
+      supportTickets: []
+    }
+  },
 
-<!--</template>-->
+  methods: {
+    findAllActiveTickets: function () {
+      this.$http.get("/support/active", {
+          }
+      ).then(response => {
+        this.supportTickets = response.data
 
-<!--<script>-->
-<!--import NewCustomerForm from "@/components/customer/NewCustomerForm";-->
-<!--import CustomersTable from "@/components/customer/CustomersTable";-->
-<!--import FindCustomersByNameForm from "@/components/customer/FindCustomersByNameForm";-->
+      }).catch(error => {
+        console.log(error)
+      })
+    },
 
-<!--export default {-->
-<!--  name: "AdminView",-->
-<!--  components: {FindCustomersByNameForm, CustomersTable, NewCustomerForm},-->
-<!--  data: function () {-->
-<!--    return {-->
-<!--      firstName: '',-->
-<!--      lastName: '',-->
-<!--      customer: {},-->
-<!--      customers: [],-->
-<!--      divDisplayAllCustomers: false,-->
-<!--      divDisplayFindCustomers: false-->
-<!--    }-->
-<!--  },-->
-<!--  methods: {-->
+    markTicketSolved: function (supportTicketId) {
+      this.$http.patch("/support/solve/"+supportTicketId,
+      ).then(response => {
+        console.log(response.data)
+        this.findAllActiveTickets()
+      }).catch(error => {
+        console.log(error)
+      })
+    }
+  },
+  mounted() {
+    this.findAllActiveTickets()
+  }
+}
+</script>
 
-<!--    findAllCustomers: function () {-->
-<!--      this.$http.get('/admin/customers')-->
-<!--          .then(response => {-->
-<!--            this.customers = response.data-->
-<!--          })-->
-<!--          .catch(reason => {-->
-<!--            console.log(reason)-->
-<!--          })-->
-<!--    },-->
+<style scoped>
 
-<!--  },-->
-<!--  displayAllCustomers: function () {-->
-<!--    this.hideAllDivs()-->
-<!--    this.findAllCustomers()-->
-<!--    this.divDisplayAllCustomers = true-->
-<!--  },-->
-
-<!--  mounted() {-->
-<!--    sessionStorage.clear()-->
-<!--  }-->
-<!--}-->
-<!--</script>-->
-
+</style>
