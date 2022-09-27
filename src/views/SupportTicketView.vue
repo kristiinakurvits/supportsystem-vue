@@ -4,11 +4,13 @@
     <div style="with: 1000px; display: inline-block; vertical-align: top;">
       <h4>Add new support ticket</h4>
       <input type="text" style="margin: 5px" placeholder="Name" v-model="supportTicket.requesterName"><br>
-      <input type="text" style="margin: 5px" placeholder="E-mail" v-model="supportTicket.requesterEMail"><br>
+      <input type="text" style="margin: 5px" placeholder="E-mail" v-model="supportTicket.requesterEMail"
+             @change="validateEmail"><br>
       <input type="text" style="margin: 5px" placeholder="Title" v-model="supportTicket.title"><br>
       <textarea style="margin: 5px" placeholder="Description" v-model="supportTicket.description"></textarea><br>
       <input type="datetime-local" style="margin: 5px" placeholder="Deadline" v-model="supportTicket.deadline"><br>
       <button type="button" style="margin: 5px" class="btn btn-dark" v-on:click="addNewSupportTicket">Add</button>
+      <p>{{ errorMessage }}</p>
     </div>
 
   </div>
@@ -41,6 +43,13 @@ export default {
 
       })
     },
+    validateEmail() {
+      if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.supportTicket.requesterEMail)) {
+        this.errorMessage = '';
+      } else {
+        this.errorMessage = 'Please enter a valid email address';
+      }
+    }
   }
 }
 </script>
